@@ -1,0 +1,96 @@
+SpriteAttributes = $6A
+EnemyPoints = $AA
+SpriteTypeIndex = $0500
+SpriteState = $0520
+SpriteGraphicsAttributes = $0540
+SpriteVertScreenPosition = $0560
+SpriteVertScreenPositionSubPixel = $0580
+SpriteHorizScreenPosition = $05A0
+SpriteHorizScreenPositionSubPixel = $05C0
+SpriteVertSpeedUB = $05E0
+SpriteVertSpeedLB = $0600
+SpriteHorizSpeedUB = $0620
+SpriteHorizSpeedLB = $0640
+SpriteData1 = $0660
+SpriteData2 = $0670
+SpriteData3 = $0680
+SpriteData4 = $0690
+SpriteData5 = $06A0
+SpriteData6 = $06B0
+SpriteWhatDirectionToShoot = $06C0
+SpriteData8 = $06D0
+SpriteWhichJeeptoAttack = $06E0
+SpriteAbsoluteHorizPositionUB = $06F0
+SpriteAbsoluteVertPositionUB = $0700 ;FF=below screen,00=on screen,01=above screen
+SpriteAbsoluteHorizPositionLB = $0710
+SpriteObjectID = $0720
+;Object ID MSB = 1 indicates that the object will NOT be despawned when off screen
+;or when other objects are trying to spawn in.  This also means that this object
+;will NOT be destroyed when the Death power up star is collected.
+SpriteHitboxShapeIndex = $0730 
+SpriteHealthHP = $0740
+
+
+
+;***********************************************
+;***********************************************
+;Spawning an Object:
+
+;EITHER POPULATE 0000-0003 AND CALL subSpawnObjectFromParent_NoOffset
+;OR DONT AND CALL subSpawnObjectFromParent_WithOffset instead.
+
+;spawn object parameters	
+;Temp RAM Location   Destination Sprite RAM slot
+0000	Contains Horizontal LB Offset from Spawning Parent
+0001	Contains Horizontal UB Offset from Spawning Parent
+0002	Contains Vertical LB Offset from Spawning Parent
+0003	Contains Vertical UB Offset from Spawning Parent
+
+0004-0007 ARE CALCULATED FROM 0000-0003
+0004				0710 - Abs Horiz Position LB
+0005				06F0 - Abs Horiz Position UB
+0006				0560 - Vert Position
+0007				0700 - Abs Vert Position UB
+
+0008				0720 - Object ID
+0009				0690 - Sprite Data 4
+000A				06A0 - Sprite Data 5
+000B				06B0 - Sprite Data 6
+000C				06C0 - Direction To Shoot
+000D				06D0 - Sprite Data 8
+000E				06E0 - Which Jeep to Attack
+000F				006A/0540 - Graphics Attributes
+0010				0660 - Sprite Data 1
+0011				0670 - Sprite Data 2
+0012				0680 - Sprite Data 3
+; ***********************************************
+; ***********************************************
+
+
+; *********
+; Direction
+; *********
+some directions are 0-8, some are 00-1F
+;0-7
+0 = right
+1 = down-right
+2 = down
+3 = down-left
+4 = left
+5 = up-left
+6 = up
+7 = up-right
+
+; 00-1F
+00 = right
+08 = down
+10 = left
+18 = up
+and each quarter circle is divided up into 6 smaller angles between the values above, CW
+
+See tblSpriteConstructionHeaderAddress for SpriteTypeIndex
+; ********
+; Routines
+; ********
+subInGamePPUUpdates - updates nametables during gameplay
+tblObjectControlledGraphicsUpdate - BG updates from sprite death
